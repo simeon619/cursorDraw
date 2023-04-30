@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CursorDraw</title>
+    <style>
+      .cursor {
+        background: #459;
+        width: 14px;
+        height: 25px;
+        position: absolute;
+      }
+      * {
+        /* cursor: none; */
+      }
+    </style>
+  </head>
+  <body>
+    <h1>CursorDraw</h1>
+  </body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.1/socket.io.js"></script>
+  <script>
+    let socket = io();
+    // document.body.style.cursor = "none";
+    const create = (id) => {};
+
+    document.addEventListener("mousemove", (ev) => {
+      socket.emit("client:position", { x: ev.x, y: ev.y });
+    });
+
+    socket.on("server:userPosition", (usersPosition) => {
+      //    const cursor = document.querySelector('#'+userid);
+      for (const id in usersPosition) {
+        if (Object.hasOwnProperty.call(usersPosition, id)) {
+          const data = usersPosition[id];
+          const cursor = document.querySelector(`div[data-id="${data.id}"]`);
+          //   console.log(cursor);
+          cursor.style.top = data.position.y + "px";
+          cursor.style.left = data.position.x + "px";
+        }
+      }
+    });
+
+    socket.on("server:userCreate", (userid) => {
+      console.log("CREATE ", userid);
+      let div = document.createElement("div");
+      div.dataset.id = userid;
+      div.classList.add("cursor");
+      document.body.appendChild(div);
+    });
+    socket.on("server:userDestroy", (userid) => {
+      document.querySelector("#" + userid)?.remove();
+    });
+  </script>
+</html>
