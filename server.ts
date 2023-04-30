@@ -1,3 +1,4 @@
+import cors from "cors";
 import express from "express";
 import path from "path";
 
@@ -8,6 +9,8 @@ const app = express();
 const server = app.listen(PORT, () => {
   console.log("Server running at http://localhost:" + PORT);
 });
+
+app.use(cors());
 
 let users = {};
 const io = new Server(server);
