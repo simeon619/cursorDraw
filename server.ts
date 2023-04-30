@@ -2,7 +2,8 @@ import express from "express";
 import path from "path";
 
 import { Server } from "socket.io";
-const PORT = 3500;
+const PORT = process.env.PORT || 8080;
+
 const app = express();
 const server = app.listen(PORT, () => {
   console.log("Server running at http://localhost:" + PORT);
